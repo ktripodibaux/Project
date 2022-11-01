@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/pulumi/pulumi-aws/sdk/v5/go/aws/ec2"
 	"github.com/pulumi/pulumi-aws/sdk/v5/go/aws/eks"
+	"github.com/pulumi/pulumi-aws/sdk/v5/go/aws/rds"
 	"github.com/pulumi/pulumi-aws/sdk/v5/go/aws/s3"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
@@ -122,10 +123,11 @@ func main() {
 		eks.NewNodeGroup(ctx, "Istio_nodegroup", &eks.NodeGroupArgs{
 			ClusterName: pulumi.String("example-5b13529"),
 			//eks.NodeGroupTaintArrayInput
-			Taints: eks.NodeGroupTaintArgs{
-				Effect: pulumi.StringInput("NO_SCHEDULE"),
-				// Effect: pulumi.String("NO_SCHEDULE"),
-				// Key:    pulumi.String("dedicated"),
+			Taints: eks.NodeGroupTaintArray{
+				eks.NodeGroupTaintArgs{
+					Effect: pulumi.String("NO_SCHEDULE"),
+					Key:    pulumi.String("istio"),
+				},
 			},
 
 			SubnetIds: pulumi.StringArray{
@@ -154,6 +156,27 @@ func main() {
 				MaxSize:     pulumi.Int(2),
 				MinSize:     pulumi.Int(1),
 			},
+		})
+
+		ec2.NewDefaultVpc(ctx, "default", &ec2.DefaultVpcArgs{
+			Tags: pulumi.StringMap{
+				"Name": pulumi.String("Default VPC"),
+			},
+		})
+
+		rds.NewCluster(ctx, "postgresql", &rds.ClusterArgs{
+			AvailabilityZones: pulumi.StringArray{
+				pulumi.String("us-east-1c"),
+				pulumi.String("us-east-1d"),
+				pulumi.String("us-east-1a"),
+			},
+			BackupRetentionPeriod: pulumi.Int(5),
+			ClusterIdentifier:     pulumi.String("aurora-cluster-demo"),
+			DatabaseName:          pulumi.String("mydb"),
+			Engine:                pulumi.String("aurora-postgresql"),
+			MasterPassword:        pulumi.String("Testing123"),
+			MasterUsername:        pulumi.String("testUser"),
+			PreferredBackupWindow: pulumi.String("07:00-09:00"),
 		})
 
 		// if nodegroup == nil && nodegroup2 == nil {
