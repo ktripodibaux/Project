@@ -19,10 +19,11 @@ pilot:
   # Resources for a small pilot install
   resources:
     requests:
-      cpu: 500m
-      memory: 2048Mi
+      cpu: 100m
+      memory: 200Mi
 
   env: {}
+
 
   cpu:
     targetAverageUtilization: 80
@@ -145,7 +146,7 @@ telemetry:
       enabled: true
       # Indicates whether to enable WebAssembly runtime for stats filter.
       wasmEnabled: false
-      # overrides stats EnvoyFilter configuration.
+      # overrides stats  configuration.
       configOverride:
         gateway: {}
         inboundSidecar: {}
@@ -210,7 +211,7 @@ meshConfig:
 
 global:
   # Used to locate istiod.
-  istioNamespace: istio-system
+  istioNamespace: default
   # enable pod disruption budget for the control plane, which is used to
   # ensure Istio control plane components are gradually upgraded or recovered.
   defaultPodDisruptionBudget:

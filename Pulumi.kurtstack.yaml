@@ -1,2 +1,7 @@
+encryptionsalt: v1:HEFYuio1rxg=:v1:aYRuEl15nEC6rhY4:wnNRRQWC8hdILexfYqEsV3cczPombg==
 config:
   aws:region: us-east-1
+  kurtproject:dbInstanceSize: db.t3.small
+  kurtproject:postgresqlPassword:
+    secure: v1:YG+OSIYJp1+qs6k5:cD4Q/+AdF5xIvxm0IWnPNH3t31c2gqmZzNM=
+  kurtproject:postgresqlUsername: testUser
